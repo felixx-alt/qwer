@@ -1,0 +1,35 @@
+# 文件名必须改为小写：.github/workflows/obfuscate.yml
+name: 自动混淆处理
+
+on:
+  push:
+    branches: [ main ]  # 仅当main分支有代码推送时触发
+  workflow_dispatch:    # 允许手动点击运行
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    # 必须添加的权限配置
+    permissions:
+      contents: write  # 允许自动提交代码
+      actions: read
+
+    steps:
+      # 第一步：下载代码
+      - name: 下载代码
+        uses: actions/checkout@v4
+
+      # 第二步：测试步骤（后续可替换为你的真实操作）
+      - name: 生成测试文件
+        run: |
+          echo "这是一个测试文件" > test.txt
+          date >> test.txt
+
+      # 第三步：自动提交修改
+      - name: 自动提交
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: '自动更新 [by bot]'
+          file_pattern: |
+            test.txt
